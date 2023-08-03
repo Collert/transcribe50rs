@@ -7,19 +7,19 @@ OUTPUT_FILE_NAME = "transcription.txt"
         
 def listen(recognizer, microphone):
     with microphone as source:
-        audio = recognizer.listen(source, timeout=2)
+        audio = recognizer.listen(source)
         return audio
         
 def transcribe(audio, recognizer, translator):
     try:
-        uk_text = recognizer.recognize_google(audio)
+        uk_text = recognizer.recognize_google(audio, language="uk-UA")
+        translated_text = translator.translate(uk_text, src="uk", dest="en")
+        write_to_file(OUTPUT_FILE_NAME, translated_text.text)
     except sr.UnknownValueError:
         print("Could not understand audio.")
         write_to_file(OUTPUT_FILE_NAME, "")
     except sr.RequestError as e:
         print(f"Error occurred during recognition: {e}")
-    translated_text = translator.translate(uk_text, src="uk", dest="en")
-    write_to_file(OUTPUT_FILE_NAME, translated_text)
 
 def write_to_file(file_path, text):
     with open(file_path, "w", encoding="utf-8") as file:
