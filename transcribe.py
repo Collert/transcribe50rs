@@ -1,4 +1,5 @@
 import speech_recognition as sr
+import overrides as mysr
 from googletrans import Translator
 import threading
 
@@ -6,11 +7,14 @@ import threading
 OUTPUT_FILE_NAME = "transcription.txt"
         
 def listen(recognizer, microphone):
+    print("Listening...")
     with microphone as source:
         audio = recognizer.listen(source)
+        print("Stopped listening")
         return audio
         
 def transcribe(audio, recognizer, translator):
+    # print("Transcribing...")
     try:
         uk_text = recognizer.recognize_google(audio, language="uk-UA")
         translated_text = translator.translate(uk_text, src="uk", dest="en")
@@ -35,18 +39,35 @@ def get_mic():
         except ValueError:
             print("Invalid index")
 
+def test_recording():
+    recognizer = mysr.NewRecognizer()
+    recognizer.energy_threshold = 1000
+    recognizer.pause_threshold=0.3
+    recognizer.non_speaking_duration=0.3
+    microphone = sr.Microphone()
+
+    with microphone as source:
+        print("Adjusting for ambient noise, please don't say anything...")
+        recognizer.adjust_for_ambient_noise(source, duration=3)
+        print("Listening")
+        audio = recognizer.listen(source)
+    with open("microphone-results.wav", "wb") as f:
+        f.write(audio.get_wav_data())
+
 if __name__ == "__main__":
 
     mic_index = get_mic()
     translator = Translator()
-    recognizer = sr.Recognizer()
+    recognizer = mysr.NewRecognizer()
+    recognizer.energy_threshold = 1000
+    recognizer.pause_threshold=0.3
+    recognizer.non_speaking_duration=0.3
     microphone = sr.Microphone(device_index=mic_index)
 
     print("Adjusting for ambient noise, please don't say anything...")
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
 
-    print("Listening...")
 
     try:
         while True:
@@ -61,4 +82,4 @@ if __name__ == "__main__":
             transcription_thread.start()
     except KeyboardInterrupt:
         print("\nShutting down recognition service...")
-        write_to_file("transcription.txt", "Recognition service inactive. This is sample text.")
+        write_to_file(OUTPUT_FILE_NAME, "Recognition service inactive. This is sample text.")
