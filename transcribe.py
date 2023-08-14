@@ -23,10 +23,10 @@ def transcribe(audio, recognizer, translator):
     # print("Transcribing...")
     try:
         uk_text = recognizer.recognize_google(audio, language=IN_LANGUAGE)
+        translated_text = translator.translate(uk_text, src=SHORT_IN, dest=SHORT_OUT)
         # Comment out the following line to activate "transcribe50 after dark"
-        processed_text = profanity.censor(uk_text)
-        translated_text = translator.translate(processed_text, src=SHORT_IN, dest=SHORT_OUT)
-        write_to_file(OUTPUT_FILE_NAME, translated_text.text)
+        processed_text = profanity.censor(translated_text.text)
+        write_to_file(OUTPUT_FILE_NAME, processed_text)
     except sr.UnknownValueError:
         print("Could not understand audio.")
         write_to_file(OUTPUT_FILE_NAME, "")
