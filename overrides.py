@@ -4,6 +4,10 @@ import audioop
 import os
 import math
 
+# This recognizer version will filter out occasional spikes in volume which lead to continuation of recording when the environment was actually silent
+# The idea is basically: any spikes in volume above the "speaking" threshold get ignored unless the said spike continues for more than 5 frames
+# This will improve speed of the program as it would ignore the potential "bridging islands" of noise which would connect phrases that were meant to be separate into one 
+
 class NewRecognizer(sr.Recognizer):
     def listen(self, source, timeout=None, phrase_time_limit=None, snowboy_configuration=None):
         """

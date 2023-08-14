@@ -5,6 +5,11 @@ import threading
 
 # Config
 OUTPUT_FILE_NAME = "transcription.txt"
+# These next two have to be in ISO 639-1 format (see: https://www.w3schools.com/tags/ref_language_codes.asp)
+IN_LANGUAGE = "uk-UA"
+OUT_LANGUAGE = "en-US"
+SHORT_IN = IN_LANGUAGE.split("-")[0]
+SHORT_OUT = OUT_LANGUAGE.split("-")[0]
         
 def listen(recognizer, microphone):
     print("Listening...")
@@ -16,8 +21,8 @@ def listen(recognizer, microphone):
 def transcribe(audio, recognizer, translator):
     # print("Transcribing...")
     try:
-        uk_text = recognizer.recognize_google(audio, language="uk-UA")
-        translated_text = translator.translate(uk_text, src="uk", dest="en")
+        uk_text = recognizer.recognize_google(audio, language=IN_LANGUAGE)
+        translated_text = translator.translate(uk_text, src=SHORT_IN, dest=SHORT_OUT)
         write_to_file(OUTPUT_FILE_NAME, translated_text.text)
     except sr.UnknownValueError:
         print("Could not understand audio.")
@@ -40,6 +45,8 @@ def get_mic():
             print("Invalid index")
 
 def test_recording():
+    # This function never gets used in runtime, it is simply here to test the microphone
+    # Run it with the following command: `python -c 'from transcribe import *; test_recording()'`
     recognizer = mysr.NewRecognizer()
     recognizer.energy_threshold = 1000
     recognizer.pause_threshold=0.3
@@ -67,7 +74,6 @@ if __name__ == "__main__":
     print("Adjusting for ambient noise, please don't say anything...")
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
-
 
     try:
         while True:
