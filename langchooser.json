@@ -1,0 +1,9 @@
+{
+    "from_lang": "en-US",
+    "to_lang": "ca-AD",
+    "default_prompt": "Voleu mantenir la configuraci\u00f3 d'idioma actual? 1=S\u00ed 2=No:",
+    "config_file": "langchooser.json",
+    "from_prompt": "De quina llengua? (p. ex.: en-US) Deixeu en blanc per mostrar tots els idiomes:",
+    "to_prompt": "A quina llengua? (p. ex.: en-US) Deixeu en blanc per mostrar tots els idiomes:",
+    "invalid_prompt": "Idioma no v\u00e0lid. Utilitzeu el format ISO 639-1. ex.: en-US"
+}

@@ -3,12 +3,18 @@ import overrides as mysr
 from googletrans import Translator
 import threading
 from better_profanity import profanity
+from langchooser import LangChooser
 
 # Config
 OUTPUT_FILE_NAME = "transcription.txt"
 # These next two have to be in ISO 639-1 format (see: https://www.w3schools.com/tags/ref_language_codes.asp)
-IN_LANGUAGE = "uk-UA"
-OUT_LANGUAGE = "en-US"
+
+# Prompt for language
+langchooser = LangChooser()
+langchooser.prompt()
+
+IN_LANGUAGE = langchooser.from_lang
+OUT_LANGUAGE = langchooser.to_lang
 SHORT_IN = IN_LANGUAGE.split("-")[0]
 SHORT_OUT = OUT_LANGUAGE.split("-")[0]
         
