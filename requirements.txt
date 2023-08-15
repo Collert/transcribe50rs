@@ -2,3 +2,4 @@ SpeechRecognition
 googletrans==3.1.0a0
 pyaudio
 better-profanity
+json
